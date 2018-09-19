@@ -1,5 +1,6 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from rest_framework.routers import Route, DynamicDetailRoute, SimpleRouter
+
 
 class SimpleNestedRouter(SimpleRouter):
 
@@ -30,7 +31,7 @@ class SimpleNestedRouter(SimpleRouter):
 
     def route_or_exception(self, entry_list):
         try:
-            return Route(*entry_list[0])
+            return Route(*entry_list[0], initkwargs={})
         except:
             raise RuntimeError('registered resource not found')
 

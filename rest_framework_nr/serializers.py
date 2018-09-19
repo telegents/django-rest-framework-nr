@@ -2,14 +2,14 @@ import copy
 import importlib
 from django.db import models
 from django.db import IntegrityError
-from django.core.urlresolvers import resolve
+from django.urls import resolve
 from rest_framework import serializers
 from rest_framework.fields import Field
 from rest_framework.relations import RelatedField, HyperlinkedRelatedField
 from rest_framework.settings import api_settings
 from rest_framework.exceptions import PermissionDenied, status
 from rest_framework.reverse import reverse
-from libs.funcs import getattr_str
+from .funcs import getattr_str
 
 
 class HyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
@@ -26,7 +26,7 @@ class HyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
             for field_name in getattr(self.Meta, 'superuser_fields', []):
                 self.fields.pop(field_name)
 
-        fields = request.QUERY_PARAMS.get('fields')
+        fields = request.query_params.get('fields')
         if fields:
             fields = fields.split(',')
             # Drop any fields that are not specified in the `fields` argument.
@@ -40,10 +40,10 @@ class HyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
             return super(HyperlinkedModelSerializer, self).create(
                 *args,
                 **kwargs)
-        except IntegrityError, e:
+        except IntegrityError as e:
             from libs.exceptions import ConflictError
             raise ConflictError(str(e))
-        except Exception, e:
+        except Exception as e:
             raise e
 
     def get_validators(self):

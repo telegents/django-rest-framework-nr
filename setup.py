@@ -6,16 +6,16 @@ from setuptools import setup, find_packages
 from codecs import open
 
 setup(
-    name='djangorestframework-ipglobal',
+    name='djangorestframework-nr',
     version='0.1.1',
-    description='Provide nested router and Authorize Stormpath token  access to Django REST framework resources',
-    url='https://github.com/ipglobal/djangorestframework-stormpath',
+    description='Provide nested router support to Django REST Framework',
+    url='https://github.com/ipglobal/django-rest-framework-nr',
     author='Jarrod Baumann',
     author_email='jarrod@unixc.org',
     license='MIT',
-    keywords='djangorestframework stormpath',
+    keywords='djangorestframework nested',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    install_requires=['PyJWT', 'requests'],
+    install_requires=[],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',

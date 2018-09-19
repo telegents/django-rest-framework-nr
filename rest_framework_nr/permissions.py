@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from libs.funcs import getattr_str
+from .funcs import getattr_str
 
 
 class IsSuperuser(permissions.BasePermission):

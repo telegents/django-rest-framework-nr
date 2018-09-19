@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from rest_framework import authentication, permissions, viewsets
 from rest_framework import status, exceptions
 from rest_framework.response import Response
@@ -37,6 +37,7 @@ class ScopedViewSet(viewsets.ModelViewSet):
         return super(ScopedViewSet, self).list(request)
 
     def create(self, request, parent=None, parent_pk=None, child=None):
+        import pdb; pdb.set_trace()
         if parent_pk and child:
             # Verify the child (this view) is not a platform resource or 403
             if getattr(self, 'platform', None):
@@ -48,9 +49,9 @@ class ScopedViewSet(viewsets.ModelViewSet):
             parent_uri = self._get_parent_uri(request, basename, parent_pk)
 
             # Use Middleware instead of overriding Django's protection?
-            if hasattr(request.DATA, '_mutable'):
-                request.DATA._mutable = True
-            request.DATA[basename] = parent_uri
+            if hasattr(request.data, '_mutable'):
+                request.data._mutable = True
+            request.data[basename] = parent_uri
         return super(ScopedViewSet, self).create(request)
 
     def update(self, request, *args, **kwargs):
@@ -60,7 +61,7 @@ class ScopedViewSet(viewsets.ModelViewSet):
         # apply a _filter if specified on the request
         _filter = getattr(self.request, '_filter', {})
         filter_fields = getattr(self, 'filter_fields', ())
-        for key in self.request.QUERY_PARAMS:
+        for key in self.request.query_params:
             params = key.split('__')
 
             # Verify that filtered fields are allowed
@@ -85,7 +86,7 @@ class ScopedViewSet(viewsets.ModelViewSet):
             else:
                 raise exceptions.ParseError(detail='Filter not allowed')
 
-            value = self.request.QUERY_PARAMS[key]
+            value = self.request.query_params[key]
             _filter[key] = None if value == 'None' else value
 
         return self.queryset.filter(**_filter)
